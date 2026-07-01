@@ -20,3 +20,4 @@ sentence-transformers
 langchain-huggingface
 langchain-text-splitters
 textblob
+pytest
