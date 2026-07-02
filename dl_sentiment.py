@@ -34,10 +34,22 @@ def analyze_sentiment_dl(text: str) -> dict:
 
     # BERT has a token limit - if text is too long, we truncate it
     # (we take first 512 words which is BERT's max input size)
-    truncated_text = " ".join(text.split()[:400])
+    text = str(text).strip()
+    if not text:
+        text = "neutral text"
+    truncated_text = " ".join(text.split()[:300])
+   
+    
 
     # Run the BERT model on the text
-    result = sentiment_pipeline(truncated_text)[0]
+    try:
+      result = sentiment_pipeline(truncated_text)[0]
+    except Exception as e:
+      return {
+        "dl_sentiment": "Neutral 😐",
+        "dl_confidence": "N/A",
+        "model_used": "distilbert-base-uncased-finetuned-sst-2-english"
+    }
 
     # result looks like: {"label": "POSITIVE", "score": 0.9998}
     label = result["label"]           # POSITIVE or NEGATIVE
