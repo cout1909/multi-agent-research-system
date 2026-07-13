@@ -11,6 +11,14 @@ import os
 import time
 
 # -----------------------------------------------------
+# Load Streamlit Cloud secrets into environment variables
+# (must happen before agents.py / pipeline.py are imported,
+#  since they read os.getenv("GROQ_API_KEY") at import time)
+# -----------------------------------------------------
+os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+os.environ["TAVILY_API_KEY"] = st.secrets["TAVILY_API_KEY"]
+
+# -----------------------------------------------------
 # Page Config
 # -----------------------------------------------------
 st.set_page_config(
@@ -310,11 +318,11 @@ if run_button:
         state["research_notes"] = reader_output
 
         # Step 3: Writer
-        
+        render_pipeline(2, [])
         report = writer_chain.invoke({
-        "topic": topic,
-        "research_notes": reader_output,
-        "document_context": uploaded_docs_context if uploaded_docs_context else ""
+            "topic": topic,
+            "research_notes": reader_output,
+            "document_context": uploaded_docs_context if uploaded_docs_context else ""
         })
         state["report"] = report
 
