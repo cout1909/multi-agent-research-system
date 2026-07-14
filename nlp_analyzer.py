@@ -13,6 +13,22 @@ from nltk.corpus import stopwords
 from nltk.probability import FreqDist
 from textblob import TextBlob
 
+# ---------------------------------------------------------
+# Ensure required NLTK data is available.
+# Streamlit Cloud spins up a fresh environment on every deploy,
+# so this data isn't pre-downloaded like it might be on your
+# local machine. This checks first, and only downloads if missing.
+# ---------------------------------------------------------
+for resource, path in [
+    ("punkt_tab", "tokenizers/punkt_tab"),
+    ("stopwords", "corpora/stopwords"),
+]:
+    try:
+        nltk.data.find(path)
+    except LookupError:
+        nltk.download(resource, quiet=True)
+
+
 def analyze_report(report: str) -> dict:
     """
     Takes the research report text and runs NLP analysis on it.
